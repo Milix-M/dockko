@@ -8,7 +8,7 @@ import { PiCube } from "react-icons/pi";
 
 export default function Sidebar() {
     return (
-        <Card className="h-[calc(100vh)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5 bg-gray-100 rounded-none">
+        <Card className="h-[calc(100vh)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5 bg-blue-gray-50/75 rounded-none">
             <div className="mb-2 flex items-center gap-4 p-4">
                 <GiWhaleTail className="w-8 h-8" color="teal" />
                 <Typography variant="h5" color="blue-gray">

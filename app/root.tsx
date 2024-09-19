@@ -33,7 +33,7 @@ export default function App() {
 			<body>
 				<div className="flex">
 					<Sidebar></Sidebar>
-					<div className="mx-6 my-2 w-full">
+					<div className="px-6 py-2 w-full bg-gray-50/75">
 						<Outlet />
 					</div>
 				</div>
