@@ -31,8 +31,12 @@ export default function App() {
 				<Links />
 			</head>
 			<body>
-				<Sidebar></Sidebar>
-				<Outlet />
+				<div className="flex">
+					<Sidebar></Sidebar>
+					<div className="mx-6 my-8">
+						<Outlet />
+					</div>
+				</div>
 				<ScrollRestoration />
 				<Scripts />
 				<LiveReload />
