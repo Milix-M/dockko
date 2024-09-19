@@ -30,6 +30,7 @@ app.on("ready", () => {
 
 			const url = await initRemix({
 				serverBuild: path.join(__dirname, "../build/index.js"),
+				publicFolder: path.join(__dirname, "../public/"),
 			})
 			await createWindow(url)
 		} catch (error) {
