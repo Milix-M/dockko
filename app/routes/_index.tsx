@@ -11,7 +11,7 @@ export default function Index() {
 	const data = useLoaderData<typeof loader>()
 	return (
 		<main>
-			<h1>Welcome to Remix</h1>
+			<h1 className="text-sm font-bold">Welcome to Remix</h1>
 			<p>User data path: {data.userDataPath}</p>
 		</main>
 	)

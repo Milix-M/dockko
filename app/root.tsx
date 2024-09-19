@@ -7,7 +7,7 @@ import {
 	Scripts,
 	ScrollRestoration,
 } from "@remix-run/react"
-import styles from "./styles.css"
+import styles from "./tailwind.css"
 
 export const meta: MetaFunction = () => [{ title: "New Remix App" }]
 
