@@ -42,7 +42,7 @@ export default function Sidebar() {
                     Networks
                 </ListItem>
 
-                <hr className="my-2 border-blue-gray-50" />
+                <hr className="my-2 border-blue-gray-100" />
 
                 <ListItem>
                     <ListItemPrefix>
