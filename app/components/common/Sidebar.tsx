@@ -1,5 +1,5 @@
 import { Card, List, ListItem, ListItemPrefix, Typography } from "@material-tailwind/react";
-import { Link } from "@remix-run/react";
+import { Link, useLocation } from "@remix-run/react";
 import { BsGear } from "react-icons/bs";
 import { CiServer } from "react-icons/ci";
 import { GiWhaleTail } from "react-icons/gi";
@@ -8,6 +8,8 @@ import { IoGitNetworkOutline } from "react-icons/io5";
 import { PiCube } from "react-icons/pi";
 
 export default function Sidebar() {
+    const location = useLocation();
+
     return (
         <Card className="h-[calc(100vh)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5 bg-blue-gray-50/75 rounded-none">
             <div className="mb-2 flex items-center gap-4 p-4">
@@ -19,7 +21,7 @@ export default function Sidebar() {
 
             <List>
                 <Link to="/">
-                    <ListItem>
+                    <ListItem selected={location.pathname === "/"}>
                         <ListItemPrefix>
                             <GoContainer className="h-5 w-5" />
                         </ListItemPrefix>
@@ -27,7 +29,7 @@ export default function Sidebar() {
                     </ListItem>
                 </Link>
                 <Link to="/images">
-                    <ListItem>
+                    <ListItem selected={location.pathname === "/images"}>
                         <ListItemPrefix>
                             <PiCube className="h-5 w-5" />
                         </ListItemPrefix>
@@ -35,7 +37,7 @@ export default function Sidebar() {
                     </ListItem>
                 </Link>
                 <Link to="/volumes">
-                    <ListItem>
+                    <ListItem selected={location.pathname === "/volumes"}>
                         <ListItemPrefix>
                             <CiServer className="h-5 w-5" />
                         </ListItemPrefix>
@@ -43,7 +45,7 @@ export default function Sidebar() {
                     </ListItem>
                 </Link>
                 <Link to="/networks">
-                    <ListItem>
+                    <ListItem selected={location.pathname === "/networks"}>
                         <ListItemPrefix>
                             <IoGitNetworkOutline className="h-5 w-5" />
                         </ListItemPrefix>
@@ -54,7 +56,7 @@ export default function Sidebar() {
                 <hr className="my-2 border-blue-gray-100" />
 
                 <Link to="/settings">
-                    <ListItem>
+                    <ListItem selected={location.pathname === "/settings"}>
                         <ListItemPrefix>
                             <BsGear className="h-5 w-5" />
                         </ListItemPrefix>
