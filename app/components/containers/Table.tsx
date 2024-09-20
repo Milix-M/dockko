@@ -3,8 +3,13 @@ import { FaStop } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa6";
 import { IoMdSearch } from "react-icons/io";
 import { TbDotsVertical } from "react-icons/tb";
+import { container } from "~/common/interfaces";
 
-export default function Table() {
+type Prop = {
+    tableProps: container[]
+}
+
+export default function Table({ tableProps }: Prop) {
     const tableHead = [
         {
             head: "Name",
@@ -30,37 +35,6 @@ export default function Table() {
         },
     ];
 
-    const tableRows = [
-        {
-            number: "welcome-to-docker",
-            customer: "docker/welcome",
-            amount: "Running",
-            issued: "1.4%",
-            date: "52:52",
-        },
-        {
-            number: "nginx",
-            customer: "nginx:latest",
-            amount: "Running",
-            issued: "2%",
-            date: "80:80",
-        },
-        {
-            number: "apache2",
-            customer: "apache:latest",
-            amount: "Stopped",
-            issued: "0%",
-            date: "8080:8080",
-        },
-        {
-            number: "devcontainer",
-            customer: "local",
-            amount: "Stopped",
-            issued: "50%",
-            date: "3222:3222",
-        },
-    ];
-
     return (
         <Card className="h-full w-full">
             <CardHeader
@@ -74,7 +48,7 @@ export default function Table() {
                         icon={<IoMdSearch className="h-5 w-5" />} crossOrigin={undefined} />
                 </div>
             </CardHeader>
-            <table className="w-full min-w-max table-auto text-left">
+            <table className="w-full min-w-fit table-auto text-left ">
                 <thead>
                     <tr>
                         {tableHead.map(({ head, icon }) => (
@@ -94,13 +68,13 @@ export default function Table() {
                     </tr>
                 </thead>
                 <tbody>
-                    {tableRows.map(
-                        ({ number, customer, amount, issued, date }, index) => {
-                            const isLast = index === tableRows.length - 1;
+                    {tableProps.map(
+                        ({ Names, Image, State, Status, Ports }, index) => {
+                            const isLast = index === tableProps.length - 1;
                             const classes = isLast ? "p-4" : "p-4 border-b border-gray-300";
 
                             return (
-                                <tr key={number}>
+                                <tr key={Names[0]}>
                                     <td className={classes}>
                                         <div className="flex items-center gap-1">
                                             <Checkbox crossOrigin={undefined} />
@@ -109,7 +83,7 @@ export default function Table() {
                                                 color="blue-gray"
                                                 className="font-semibold"
                                             >
-                                                {number}
+                                                {Names[0]}
                                             </Typography>
                                         </div>
                                     </td>
@@ -119,7 +93,7 @@ export default function Table() {
                                             color="blue-gray"
                                             className="font-semibold"
                                         >
-                                            {customer}
+                                            {Image}
                                         </Typography>
                                     </td>
                                     <td className={classes}>
@@ -128,7 +102,7 @@ export default function Table() {
                                             color="blue-gray"
                                             className="font-semibold"
                                         >
-                                            {amount}
+                                            {State}
                                         </Typography>
                                     </td>
                                     <td className={classes}>
@@ -137,7 +111,7 @@ export default function Table() {
                                             color="blue-gray"
                                             className="font-semibold"
                                         >
-                                            {issued}
+                                            {Status}
                                         </Typography>
                                     </td>
                                     <td className={classes}>
@@ -146,7 +120,10 @@ export default function Table() {
                                             color="blue-gray"
                                             className="font-semibold"
                                         >
-                                            {date}
+                                            {Ports.map(port => {
+                                                return <p>{port.PrivatePort + ":" + port.PublicPort}</p>
+                                            })}
+
                                         </Typography>
                                     </td>
                                     <td className={classes}>
