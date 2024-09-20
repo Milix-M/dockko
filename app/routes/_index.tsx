@@ -1,19 +1,27 @@
-import { useLoaderData } from "@remix-run/react"
-import Table from "~/components/containers/Table"
-import electron from "~/electron.server"
+import { Await, useLoaderData } from "@remix-run/react";
+import { Suspense } from "react";
+import { container } from "~/common/interfaces";
+import Table from "~/components/containers/Table";
 
-export function loader() {
-	return {
-		userDataPath: electron.app.getPath("userData"),
-	}
+export async function loader() {
+	const DOCKER_ENGINE = "http://127.0.0.1:2375"
+	const DOCKER_ENGINE_VERSION = "v1.47"
+
+	return (await fetch(new URL(DOCKER_ENGINE_VERSION, DOCKER_ENGINE) + "/containers/json")).json();
 }
 
 export default function Index() {
-	const data = useLoaderData<typeof loader>()
+	const containers: Promise<container[]> = useLoaderData<typeof loader>();
+
 	return (
 		<main>
 			<h1 className="text-2xl font-bold m-6">Containers</h1>
-			<Table></Table>
+
+			<Suspense>
+				<Await resolve={containers}>
+					{(containerdata) => <Table tableProps={containerdata} />}
+				</Await>
+			</Suspense>
 		</main>
 	)
 }
