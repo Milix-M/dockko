@@ -1,4 +1,5 @@
 import { Card, List, ListItem, ListItemPrefix, Typography } from "@material-tailwind/react";
+import { Link } from "@remix-run/react";
 import { BsGear } from "react-icons/bs";
 import { CiServer } from "react-icons/ci";
 import { GiWhaleTail } from "react-icons/gi";
@@ -17,39 +18,49 @@ export default function Sidebar() {
             </div>
 
             <List>
-                <ListItem>
-                    <ListItemPrefix>
-                        <GoContainer className="h-5 w-5" />
-                    </ListItemPrefix>
-                    Containers
-                </ListItem>
-                <ListItem>
-                    <ListItemPrefix>
-                        <PiCube className="h-5 w-5" />
-                    </ListItemPrefix>
-                    Images
-                </ListItem>
-                <ListItem>
-                    <ListItemPrefix>
-                        <CiServer className="h-5 w-5" />
-                    </ListItemPrefix>
-                    Volumes
-                </ListItem>
-                <ListItem>
-                    <ListItemPrefix>
-                        <IoGitNetworkOutline className="h-5 w-5" />
-                    </ListItemPrefix>
-                    Networks
-                </ListItem>
+                <Link to="/">
+                    <ListItem>
+                        <ListItemPrefix>
+                            <GoContainer className="h-5 w-5" />
+                        </ListItemPrefix>
+                        Containers
+                    </ListItem>
+                </Link>
+                <Link to="/images">
+                    <ListItem>
+                        <ListItemPrefix>
+                            <PiCube className="h-5 w-5" />
+                        </ListItemPrefix>
+                        Images
+                    </ListItem>
+                </Link>
+                <Link to="/volumes">
+                    <ListItem>
+                        <ListItemPrefix>
+                            <CiServer className="h-5 w-5" />
+                        </ListItemPrefix>
+                        Volumes
+                    </ListItem>
+                </Link>
+                <Link to="/networks">
+                    <ListItem>
+                        <ListItemPrefix>
+                            <IoGitNetworkOutline className="h-5 w-5" />
+                        </ListItemPrefix>
+                        Networks
+                    </ListItem>
+                </Link>
 
                 <hr className="my-2 border-blue-gray-100" />
 
-                <ListItem>
-                    <ListItemPrefix>
-                        <BsGear className="h-5 w-5" />
-                    </ListItemPrefix>
-                    Settings
-                </ListItem>
+                <Link to="/settings">
+                    <ListItem>
+                        <ListItemPrefix>
+                            <BsGear className="h-5 w-5" />
+                        </ListItemPrefix>
+                        Settings
+                    </ListItem>
+                </Link>
             </List>
         </Card>
     )
