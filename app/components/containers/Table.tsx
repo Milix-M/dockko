@@ -3,13 +3,14 @@ import { FaStop } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa6";
 import { IoMdSearch } from "react-icons/io";
 import { TbDotsVertical } from "react-icons/tb";
-import { Container } from "~/common/interfaces";
+import { ContainerDetail } from "~/common/types/ContainerDetail";
 
 type Prop = {
-    tableProps: Container[]
+    tableProps: ContainerDetail[]
 }
 
 export default function Table({ tableProps }: Prop) {
+
     const tableHead = [
         {
             head: "Name",
@@ -69,12 +70,12 @@ export default function Table({ tableProps }: Prop) {
                 </thead>
                 <tbody>
                     {tableProps.map(
-                        ({ Names, Image, State, Status, Ports }, index) => {
+                        ({ Name, Config, State, HostConfig, NetworkSettings }, index) => {
                             const isLast = index === tableProps.length - 1;
                             const classes = isLast ? "p-4" : "p-4 border-b border-gray-300";
 
                             return (
-                                <tr key={Names[0]}>
+                                <tr key={Name}>
                                     <td className={classes}>
                                         <div className="flex items-center gap-1">
                                             <Checkbox crossOrigin={undefined} />
@@ -83,7 +84,8 @@ export default function Table({ tableProps }: Prop) {
                                                 color="blue-gray"
                                                 className="font-semibold"
                                             >
-                                                {Names[0]}
+                                                {/* 先頭に変なスラッシュ入るのでsubstringで回避 */}
+                                                {Name.substring(1,)} 
                                             </Typography>
                                         </div>
                                     </td>
@@ -91,9 +93,9 @@ export default function Table({ tableProps }: Prop) {
                                         <Typography
                                             variant="small"
                                             color="blue-gray"
-                                            className="font-semibold"
+                                            className="font-semibold break-all"
                                         >
-                                            {Image}
+                                            {Config.Image}
                                         </Typography>
                                     </td>
                                     <td className={classes}>
@@ -102,7 +104,7 @@ export default function Table({ tableProps }: Prop) {
                                             color="blue-gray"
                                             className="font-semibold"
                                         >
-                                            {State}
+                                            {State.Status}
                                         </Typography>
                                     </td>
                                     <td className={classes}>
@@ -111,7 +113,7 @@ export default function Table({ tableProps }: Prop) {
                                             color="blue-gray"
                                             className="font-semibold"
                                         >
-                                            {Status}
+                                            {HostConfig.CpuPercent}%
                                         </Typography>
                                     </td>
                                     <td className={classes}>
@@ -120,9 +122,19 @@ export default function Table({ tableProps }: Prop) {
                                             color="blue-gray"
                                             className="font-semibold"
                                         >
-                                            {Ports.map(port => {
-                                                return <p key="">{port.PrivatePort + ":" + port.PublicPort}</p>
-                                            })}
+                                            {Object.entries(NetworkSettings.Ports).map(([portKey, portValues]) => (
+                                                <span key={portKey}>
+                                                    {
+                                                        portValues.map((port, index) => (
+                                                            <span key={index} className="block">
+                                                                {/* tcp or udpが入るので正規表現で消して表示 */}
+                                                                {portKey.replace(new RegExp("/.*"), "") + ":" + port.HostPort}
+                                                            </span>
+                                                        ))
+                                                    }
+                                                </span>
+                                            ))}
+
 
                                         </Typography>
                                     </td>
