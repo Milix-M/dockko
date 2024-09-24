@@ -1,16 +1,16 @@
 export interface Container {
-    "id": string
+    "Id": string
     "Names": string[]
     "Image": string
     "ImageID": string
     "Command": string
     "Created": number
     "Ports": [{
-        "PrivatePort": string
-        "PublicPort": string
+        "PrivatePort": number
+        "PublicPort": number
         "Type": string
     }]
-    "Labels": { string: string }
+    "Labels": Record<string, string>
     "SizeRw": number
     "SizeRootFs": number
     "State": string
@@ -78,11 +78,11 @@ export interface ContainerDetails {
         "User": string
         "Volumes": {
             string: { string: string }
-        },
+        }
         "WorkingDir": string
         "StopSignal": string
         "StopTimeout": number
-    },
+    }
     "Created": number
     "Driver": string
     "ExecIDs": string[]
@@ -118,10 +118,10 @@ export interface ContainerDetails {
             {
                 "Driver": string
                 "Count": number
-                "DeviceIDs\"": string[]
+                "DeviceIDs": string[]
                 "Capabilities": [
                     string[]
-                ],
+                ]
                 "Options": {
                     string: string
                 }
@@ -135,26 +135,27 @@ export interface ContainerDetails {
         "OomScoreAdj": number
         "NetworkMode": string
         "PidMode": string
-        "PortBindings": { string: string }
+        "PortBindings": Record<string, { "HostPort": string }[]>
         "Privileged": boolean
         "ReadonlyRootfs": boolean
         "PublishAllPorts": boolean
         "RestartPolicy": {
             "MaximumRetryCount": number
             "Name": string
-        },
+        }
         "LogConfig": {
             "Type": string
-        },
+        }
         "Sysctls": {
             "net.ipv4.ip_forward": string
-        },
+        }
         "Ulimits": [
             { string: string }
-        ],
+        ]
         "VolumeDriver": string
         "ShmSize": number
-    },
+
+    }
     "HostnamePath": string
     "HostsPath": string
     "LogPath": string
@@ -190,7 +191,7 @@ export interface ContainerDetails {
                 "MacAddress": string
             }
         }
-    },
+    }
     "Path": string
     "ProcessLabel": string
     "ResolvConfPath": string
@@ -210,16 +211,16 @@ export interface ContainerDetails {
                     "Output": string
                 }
             ]
-        },
-        "OOMKilled": false
-        "Dead": false
-        "Paused": false
+        }
+        "OOMKilled": boolean
+        "Dead": boolean
+        "Paused": boolean
         "Pid": number
-        "Restarting": false
-        "Running": true
+        "Restarting": boolean
+        "Running": boolean
         "StartedAt": string
         "Status": string
-    },
+    }
     "Mounts": [
         {
             "Name": string
@@ -227,7 +228,7 @@ export interface ContainerDetails {
             "Destination": string
             "Driver": string
             "Mode": string
-            "RW": false
+            "RW": boolean
             "Propagation": string
         }
     ]
