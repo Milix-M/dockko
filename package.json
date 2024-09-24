@@ -27,7 +27,8 @@
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-icons": "^5.3.0",
-		"remix-electron": "^2.0.1"
+		"remix-electron": "^2.0.1",
+		"remix-typedjson": "^0.4.1"
 	},
 	"devDependencies": {
 		"@remix-run/dev": "^2.5.1",
