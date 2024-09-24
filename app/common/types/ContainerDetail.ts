@@ -161,7 +161,19 @@ const containerDetailJSON = {
                 "GlobalIPv6PrefixLen": 0,
                 "MacAddress": "02:42:ac:12:00:02"
             }
-        }
+        },
+        "Ports": {
+            "5432/tcp": [
+                {
+                    HostIp: "0.0.0.0",
+                    HostPort: "5432",
+                },
+                {
+                    HostIp: "::",
+                    HostPort: "5432",
+                },
+            ],
+        },
     },
     "Path": "/bin/sh",
     "ProcessLabel": "",
