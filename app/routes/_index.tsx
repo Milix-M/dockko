@@ -1,12 +1,10 @@
 import { Await, useLoaderData } from "@remix-run/react";
 import { Suspense } from "react";
+import { DOCKER_ENGINE, DOCKER_ENGINE_VERSION } from "~/common/envs";
 import { Container } from "~/common/interfaces";
 import Table from "~/components/containers/Table";
 
 export async function loader() {
-	const DOCKER_ENGINE = "http://127.0.0.1:2375"
-	const DOCKER_ENGINE_VERSION = "v1.47"
-
 	return (await fetch(new URL(DOCKER_ENGINE_VERSION, DOCKER_ENGINE) + "/containers/json")).json();
 }
 
