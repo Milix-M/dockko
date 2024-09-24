@@ -206,4 +206,4 @@ const containerDetailJSON = {
 }
 
 
-export type nContainerDetail = typeof containerDetailJSON
+export type ContainerDetail = typeof containerDetailJSON
