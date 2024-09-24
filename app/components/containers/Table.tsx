@@ -3,8 +3,14 @@ import { FaStop } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa6";
 import { IoMdSearch } from "react-icons/io";
 import { TbDotsVertical } from "react-icons/tb";
+import { ContainerDetail } from "~/common/types/ContainerDetail";
 
-export default function Table() {
+type Prop = {
+    tableProps: ContainerDetail[]
+}
+
+export default function Table({ tableProps }: Prop) {
+
     const tableHead = [
         {
             head: "Name",
@@ -30,37 +36,6 @@ export default function Table() {
         },
     ];
 
-    const tableRows = [
-        {
-            number: "welcome-to-docker",
-            customer: "docker/welcome",
-            amount: "Running",
-            issued: "1.4%",
-            date: "52:52",
-        },
-        {
-            number: "nginx",
-            customer: "nginx:latest",
-            amount: "Running",
-            issued: "2%",
-            date: "80:80",
-        },
-        {
-            number: "apache2",
-            customer: "apache:latest",
-            amount: "Stopped",
-            issued: "0%",
-            date: "8080:8080",
-        },
-        {
-            number: "devcontainer",
-            customer: "local",
-            amount: "Stopped",
-            issued: "50%",
-            date: "3222:3222",
-        },
-    ];
-
     return (
         <Card className="h-full w-full">
             <CardHeader
@@ -74,7 +49,7 @@ export default function Table() {
                         icon={<IoMdSearch className="h-5 w-5" />} crossOrigin={undefined} />
                 </div>
             </CardHeader>
-            <table className="w-full min-w-max table-auto text-left">
+            <table className="w-full min-w-fit table-auto text-left ">
                 <thead>
                     <tr>
                         {tableHead.map(({ head, icon }) => (
@@ -94,13 +69,13 @@ export default function Table() {
                     </tr>
                 </thead>
                 <tbody>
-                    {tableRows.map(
-                        ({ number, customer, amount, issued, date }, index) => {
-                            const isLast = index === tableRows.length - 1;
+                    {tableProps.map(
+                        ({ Name, Config, State, HostConfig, NetworkSettings }, index) => {
+                            const isLast = index === tableProps.length - 1;
                             const classes = isLast ? "p-4" : "p-4 border-b border-gray-300";
 
                             return (
-                                <tr key={number}>
+                                <tr key={Name}>
                                     <td className={classes}>
                                         <div className="flex items-center gap-1">
                                             <Checkbox crossOrigin={undefined} />
@@ -109,7 +84,8 @@ export default function Table() {
                                                 color="blue-gray"
                                                 className="font-semibold"
                                             >
-                                                {number}
+                                                {/* 先頭に変なスラッシュ入るのでsubstringで回避 */}
+                                                {Name.substring(1,)} 
                                             </Typography>
                                         </div>
                                     </td>
@@ -117,9 +93,9 @@ export default function Table() {
                                         <Typography
                                             variant="small"
                                             color="blue-gray"
-                                            className="font-semibold"
+                                            className="font-semibold break-all"
                                         >
-                                            {customer}
+                                            {Config.Image}
                                         </Typography>
                                     </td>
                                     <td className={classes}>
@@ -128,7 +104,7 @@ export default function Table() {
                                             color="blue-gray"
                                             className="font-semibold"
                                         >
-                                            {amount}
+                                            {State.Status}
                                         </Typography>
                                     </td>
                                     <td className={classes}>
@@ -137,7 +113,7 @@ export default function Table() {
                                             color="blue-gray"
                                             className="font-semibold"
                                         >
-                                            {issued}
+                                            {HostConfig.CpuPercent}%
                                         </Typography>
                                     </td>
                                     <td className={classes}>
@@ -146,7 +122,20 @@ export default function Table() {
                                             color="blue-gray"
                                             className="font-semibold"
                                         >
-                                            {date}
+                                            {Object.entries(NetworkSettings.Ports).map(([portKey, portValues]) => (
+                                                <span key={portKey}>
+                                                    {
+                                                        portValues.map((port, index) => (
+                                                            <span key={index} className="block">
+                                                                {/* tcp or udpが入るので正規表現で消して表示 */}
+                                                                {portKey.replace(new RegExp("/.*"), "") + ":" + port.HostPort}
+                                                            </span>
+                                                        ))
+                                                    }
+                                                </span>
+                                            ))}
+
+
                                         </Typography>
                                     </td>
                                     <td className={classes}>
