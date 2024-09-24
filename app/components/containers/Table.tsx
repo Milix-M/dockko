@@ -3,10 +3,10 @@ import { FaStop } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa6";
 import { IoMdSearch } from "react-icons/io";
 import { TbDotsVertical } from "react-icons/tb";
-import { container } from "~/common/interfaces";
+import { Container } from "~/common/interfaces";
 
 type Prop = {
-    tableProps: container[]
+    tableProps: Container[]
 }
 
 export default function Table({ tableProps }: Prop) {

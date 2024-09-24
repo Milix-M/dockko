@@ -1,4 +1,4 @@
-export interface container {
+export interface Container {
     "id": string
     "Names": string[]
     "Image": string

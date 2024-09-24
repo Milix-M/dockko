@@ -1,6 +1,6 @@
 import { Await, useLoaderData } from "@remix-run/react";
 import { Suspense } from "react";
-import { container } from "~/common/interfaces";
+import { Container } from "~/common/interfaces";
 import Table from "~/components/containers/Table";
 
 export async function loader() {
@@ -11,7 +11,7 @@ export async function loader() {
 }
 
 export default function Index() {
-	const containers: Promise<container[]> = useLoaderData<typeof loader>();
+	const containers: Promise<Container[]> = useLoaderData<typeof loader>();
 
 	return (
 		<main>
