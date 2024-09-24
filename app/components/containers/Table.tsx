@@ -121,7 +121,7 @@ export default function Table({ tableProps }: Prop) {
                                             className="font-semibold"
                                         >
                                             {Ports.map(port => {
-                                                return <p>{port.PrivatePort + ":" + port.PublicPort}</p>
+                                                return <p key="">{port.PrivatePort + ":" + port.PublicPort}</p>
                                             })}
 
                                         </Typography>
