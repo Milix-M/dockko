@@ -48,7 +48,7 @@ export async function action({ request }: ActionFunctionArgs) {
 			result = await fetch(new URL(DOCKER_ENGINE_VERSION, DOCKER_ENGINE) + `/containers/${containerId}/start`, { method: 'POST', headers });
 			break;
 		case "trash":
-			result = await fetch(new URL(DOCKER_ENGINE_VERSION, DOCKER_ENGINE) + `/containers/${containerId}`, { method: 'DELETE', headers });
+			result = await fetch(new URL(DOCKER_ENGINE_VERSION, DOCKER_ENGINE) + `/containers/${containerId}?force=true`, { method: 'DELETE', headers });
 			break;
 	}
 
