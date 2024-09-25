@@ -1,3 +1,4 @@
+import { ActionFunctionArgs } from "@remix-run/node";
 import { Suspense } from "react";
 import { useTypedLoaderData } from "remix-typedjson";
 import { DOCKER_ENGINE, DOCKER_ENGINE_VERSION } from "~/common/envs";
@@ -9,7 +10,7 @@ export async function loader() {
 	let containers: Container[] = [];
 
 	// まず containers を取得
-	const response = await fetch(new URL(DOCKER_ENGINE_VERSION, DOCKER_ENGINE) + "/containers/json");
+	const response = await fetch(new URL(DOCKER_ENGINE_VERSION, DOCKER_ENGINE) + "/containers/json?all=true");
 	containers = await response.json();
 
 	// コンテナごとの詳細を取得
@@ -21,6 +22,22 @@ export async function loader() {
 	);
 
 	return containerDetails;  // containerDetails を直接返す
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+	const formData = await request.formData();
+	const containerId = formData.get('containerId')
+
+	const headers = {
+		'Accept': 'application/json',
+		'Content-Type': 'application/json'
+	};
+
+	if (containerId != null) {
+		await fetch(new URL(DOCKER_ENGINE_VERSION, DOCKER_ENGINE) + `/containers/${containerId}/stop`, { method: 'POST', headers });
+	}
+
+	return null
 }
 
 export default function Index() {
