@@ -39,7 +39,7 @@ export async function action({ request }: ActionFunctionArgs) {
 		return null
 	}
 
-	let result: Response | undefined = undefined;
+	let result: Response | null = null;
 	if (containerOperation === "stop") {
 		result = await fetch(new URL(DOCKER_ENGINE_VERSION, DOCKER_ENGINE) + `/containers/${containerId}/stop`, { method: 'POST', headers });
 	} else if (containerOperation === "start") {
