@@ -14,7 +14,7 @@ export default function ContainerStopBtn({ className, size, variant, containerId
         <Form replace method="post">
             <input type="hidden" value={containerId} name="containerId" />
 
-            <IconButton variant={variant} size={size} type="submit">
+            <IconButton variant={variant} size={size} type="submit" name="container" value="stop">
                 <FaStop className={className} />
             </IconButton>
         </Form>
