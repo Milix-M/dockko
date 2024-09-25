@@ -3,7 +3,7 @@ import { FaTrash } from "react-icons/fa";
 import { IoMdSearch } from "react-icons/io";
 import { TbDotsVertical } from "react-icons/tb";
 import { ContainerDetail } from "~/common/types/ContainerDetail";
-import ContainerStopBtn from "./ContainerStopBtn";
+import ContainerStopBtn from "./buttons/ContainerStopBtn";
 
 type Prop = {
     tableProps: ContainerDetail[]
@@ -140,7 +140,12 @@ export default function Table({ tableProps }: Prop) {
                                     </td>
                                     <td className={classes}>
                                         <div className="flex items-center gap-2">
-                                            <ContainerStopBtn variant="text" size="sm" className="h-4 w-4 text-gray-800" containerId={Id} />
+                                            {State.Running ? (
+                                                <ContainerStopBtn variant="text" size="sm" className="h-4 w-4 text-gray-800" containerId={Id} />
+                                            ) : (
+                                                <div></div>
+                                            )}
+
                                             <IconButton variant="text" size="sm">
                                                 <TbDotsVertical
                                                     className="h-4 w-4 text-gray-800"
