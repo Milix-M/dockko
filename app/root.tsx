@@ -24,6 +24,12 @@ export default function App() {
 				<Links />
 			</head>
 			<body>
+				<div className="h-10 bg-teal-50 draggable flex justify-center items-center">
+					<div className="flex items-center gap-2">
+						<p className="font-semibold text-sm">Dockko</p>
+					</div>
+				</div>
+
 				<div className="flex">
 					<Sidebar></Sidebar>
 					<div className="px-6 py-2 w-full bg-gray-50/75">
