@@ -1,9 +1,13 @@
 {
-	"name": "remix-electron-template",
-	"description": "",
+	"name": "dockko",
+	"productName": "Dockko",
+	"description": "DockerコンテナをGUIで管理。",
 	"version": "0.0.0",
 	"license": "MIT",
 	"private": true,
+	"author": {
+		"name": "Milix-M"
+	},
 	"main": "desktop/index.js",
 	"scripts": {
 		"dev": "remix dev --command \"nodemon .\" --manual",
@@ -16,7 +20,10 @@
 			"desktop",
 			"public",
 			"remix.config.js"
-		]
+		],
+		"win": {
+			"icon": "desktop/icons/icon.png"
+		}
 	},
 	"dependencies": {
 		"@material-tailwind/react": "^2.1.10",
