@@ -7,6 +7,8 @@ import { ContainerDetail } from "~/common/types/ContainerDetail";
 import ContainerStartBtn from "./buttons/ContainerStartBtn";
 import ContainerStopBtn from "./buttons/ContainerStopBtn";
 import ContainerRemoveConfirmModal from "./modal/ContainerRemoveConfirmModal";
+import { LuRefreshCw } from "react-icons/lu";
+import { useRevalidator } from "@remix-run/react";
 
 type Prop = {
     tableProps: ContainerDetail[]
@@ -15,6 +17,7 @@ type Prop = {
 export default function Table({ tableProps }: Prop) {
     const [removeConfirmModalOpen, setRemoveConfirmModalOpen] = React.useState(false);
     const [removeTarget, setRemoveTarget] = React.useState("");
+    const revalidator = useRevalidator();
 
     const tableHead = [
         {
@@ -51,10 +54,15 @@ export default function Table({ tableProps }: Prop) {
                     shadow={false}
                     className="mb-2 rounded-none p-2"
                 >
-                    <div className="w-full md:w-96">
+                    <div className="w-full md:w-96 flex items-center">
                         <Input
                             label="Search"
                             icon={<IoMdSearch className="h-5 w-5" />} crossOrigin={undefined} />
+                        <IconButton variant="text" size="sm" className="ml-2" onClick={() => { revalidator.revalidate() }}>
+                            <LuRefreshCw
+                                className="h-4 w-4 text-gray-800"
+                            />
+                        </IconButton>
                     </div>
                 </CardHeader>
                 <table className="w-full min-w-fit table-auto text-left ">
