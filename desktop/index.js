@@ -7,7 +7,12 @@ let win
 
 /** @param {string} url */
 async function createWindow(url) {
-	win = new BrowserWindow({ show: false })
+	win = new BrowserWindow({
+		show: false, titleBarStyle: 'hidden',
+		titleBarOverlay: {
+			height: 40
+		}
+	})
 	await win.loadURL(url)
 	win.show()
 
