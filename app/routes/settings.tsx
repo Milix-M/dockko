@@ -1,19 +1,24 @@
-import { Button, Card, CardBody, CardFooter, CardHeader, Input } from "@material-tailwind/react"
-import { useLoaderData } from "@remix-run/react"
-import React from "react"
-import electron from "~/electron.server"
+import { Button, Card, CardBody, CardFooter, CardHeader, Input } from "@material-tailwind/react";
+import React from "react";
 
-export function loader() {
-    return {
-        userDataPath: electron.app.getPath("userData"),
+function handleSave(serverURL: string, apiVersion: string) {
+    localStorage.setItem("dockerEngineServer", serverURL);
+    localStorage.setItem("dockerApiVersion", apiVersion);
+}
+
+function loadSettingsValue(key: string) {
+    const value = localStorage.getItem(key);
+
+    if (value == null) {
+        return undefined
+    } else {
+        return value
     }
 }
 
 export default function Settings() {
-    const data = useLoaderData<typeof loader>()
-
-    const [dockerEngineServer, setDockerEngineServer] = React.useState("http://127.0.0.1:2375");
-    const [dockerApiVersion, setDockerApiVersion] = React.useState("v1.47")
+    const [dockerEngineServer, setDockerEngineServer] = React.useState(loadSettingsValue("dockerEngineServer"));
+    const [dockerApiVersion, setDockerApiVersion] = React.useState(loadSettingsValue("dockerApiVersion"))
 
     return (
         <main>
@@ -44,7 +49,7 @@ export default function Settings() {
                     </div>
                 </CardBody>
                 <CardFooter className="flex flex-row-reverse">
-                    <Button color="teal">
+                    <Button color="teal" onClick={() => handleSave(dockerEngineServer, dockerApiVersion)}>
                         保存
                     </Button>
                 </CardFooter>
