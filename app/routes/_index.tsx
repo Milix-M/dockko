@@ -4,7 +4,7 @@ import { useTypedLoaderData } from "remix-typedjson";
 import { DOCKER_ENGINE, DOCKER_ENGINE_VERSION } from "~/common/envs";
 import { Container } from "~/common/types/Container";
 import { ContainerDetail } from "~/common/types/ContainerDetail";
-import Table from "~/components/containers/Table";
+import Table from "~/components/containers/table/Table";
 
 export async function loader() {
 	let containers: Container[] = [];
