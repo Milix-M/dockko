@@ -39,11 +39,17 @@ export async function action({ request }: ActionFunctionArgs) {
 		return null
 	}
 
-	let result: Response | undefined = undefined;
-	if (containerOperation === "stop") {
-		result = await fetch(new URL(DOCKER_ENGINE_VERSION, DOCKER_ENGINE) + `/containers/${containerId}/stop`, { method: 'POST', headers });
-	} else if (containerOperation === "start") {
-		result = await fetch(new URL(DOCKER_ENGINE_VERSION, DOCKER_ENGINE) + `/containers/${containerId}/start`, { method: 'POST', headers });
+	let result: Response | null = null;
+	switch (containerOperation) {
+		case "stop":
+			result = await fetch(new URL(DOCKER_ENGINE_VERSION, DOCKER_ENGINE) + `/containers/${containerId}/stop`, { method: 'POST', headers });
+			break;
+		case "start":
+			result = await fetch(new URL(DOCKER_ENGINE_VERSION, DOCKER_ENGINE) + `/containers/${containerId}/start`, { method: 'POST', headers });
+			break;
+		case "trash":
+			result = await fetch(new URL(DOCKER_ENGINE_VERSION, DOCKER_ENGINE) + `/containers/${containerId}?force=true`, { method: 'DELETE', headers });
+			break;
 	}
 
 	return result;
