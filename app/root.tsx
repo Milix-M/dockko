@@ -26,7 +26,7 @@ export default function App() {
 			<body>
 				<div className="h-10 bg-teal-50 draggable flex justify-center items-center">
 					<div className="flex items-center gap-2">
-						<p className="font-semibold text-sm">Dockko</p>
+						<p className="font-semibold text-sm text-blue-gray-900">Dockko</p>
 					</div>
 				</div>
 
