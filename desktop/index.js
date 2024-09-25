@@ -10,7 +10,8 @@ async function createWindow(url) {
 	win = new BrowserWindow({
 		show: false, titleBarStyle: 'hidden',
 		titleBarOverlay: {
-			height: 40
+			height: 40,
+			color: '#00000000',
 		}
 	})
 	await win.loadURL(url)
