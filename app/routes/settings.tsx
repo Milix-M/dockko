@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, CardFooter, CardHeader, Input } from "@material-tailwind/react";
 import React from "react";
-import loadSettingsValue from "~/common/settingsLoader";
+import { loadSettingsValue } from "~/common/settings";
 
 /**
  * 接続設定のデータをLocal Storageに保存する
