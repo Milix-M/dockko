@@ -1,9 +1,9 @@
 import { Card, CardHeader, Checkbox, IconButton, Input, Typography } from "@material-tailwind/react";
-import { FaStop } from "react-icons/fa";
-import { FaTrash } from "react-icons/fa6";
+import { FaTrash } from "react-icons/fa";
 import { IoMdSearch } from "react-icons/io";
 import { TbDotsVertical } from "react-icons/tb";
 import { ContainerDetail } from "~/common/types/ContainerDetail";
+import ContainerStopBtn from "./ContainerStopBtn";
 
 type Prop = {
     tableProps: ContainerDetail[]
@@ -70,7 +70,7 @@ export default function Table({ tableProps }: Prop) {
                 </thead>
                 <tbody>
                     {tableProps.map(
-                        ({ Name, Config, State, HostConfig, NetworkSettings }, index) => {
+                        ({ Name, Config, State, HostConfig, NetworkSettings, Id }, index) => {
                             const isLast = index === tableProps.length - 1;
                             const classes = isLast ? "p-4" : "p-4 border-b border-gray-300";
 
@@ -85,7 +85,7 @@ export default function Table({ tableProps }: Prop) {
                                                 className="font-semibold"
                                             >
                                                 {/* 先頭に変なスラッシュ入るのでsubstringで回避 */}
-                                                {Name.substring(1,)} 
+                                                {Name.substring(1,)}
                                             </Typography>
                                         </div>
                                     </td>
@@ -140,9 +140,7 @@ export default function Table({ tableProps }: Prop) {
                                     </td>
                                     <td className={classes}>
                                         <div className="flex items-center gap-2">
-                                            <IconButton variant="text" size="sm">
-                                                <FaStop className="h-4 w-4 text-gray-800" />
-                                            </IconButton>
+                                            <ContainerStopBtn variant="text" size="sm" className="h-4 w-4 text-gray-800" containerId={Id} />
                                             <IconButton variant="text" size="sm">
                                                 <TbDotsVertical
                                                     className="h-4 w-4 text-gray-800"
