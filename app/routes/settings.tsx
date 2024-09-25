@@ -1,14 +1,29 @@
 import { Button, Card, CardBody, CardFooter, CardHeader, Input } from "@material-tailwind/react";
 import React from "react";
 
-function handleSave(serverURL: string, apiVersion: string) {
-    localStorage.setItem("dockerEngineServer", serverURL);
-    localStorage.setItem("dockerApiVersion", apiVersion);
+/**
+ * 接続設定のデータをLocal Storageに保存する
+ * @param serverURL "dockerEngineServer"キーで保存する値
+ * @param apiVersion "dockerApiVersion"キーで保存する値
+ */
+function handleSave(serverURL: string | undefined, apiVersion: string | undefined) {
+    if (serverURL != null) {
+        localStorage.setItem("dockerEngineServer", serverURL);
+    }
+    if (apiVersion != null) {
+        localStorage.setItem("dockerApiVersion", apiVersion);
+    }
 }
 
+/**
+ * Local Storageに保存したデータを読み込む
+ * @param key 読み出したいキー
+ * @returns 設定値: string, 指定したキーに対応する値が無い場合undefined
+ */
 function loadSettingsValue(key: string) {
     const value = localStorage.getItem(key);
 
+    // nullだと使い勝手悪い時があるのでundefinedにして返す
     if (value == null) {
         return undefined
     } else {
