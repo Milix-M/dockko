@@ -27,17 +27,26 @@ export async function loader() {
 export async function action({ request }: ActionFunctionArgs) {
 	const formData = await request.formData();
 	const containerId = formData.get('containerId')
+	const containerOperation = formData.get('container')
 
 	const headers = {
 		'Accept': 'application/json',
 		'Content-Type': 'application/json'
 	};
 
-	if (containerId != null) {
-		await fetch(new URL(DOCKER_ENGINE_VERSION, DOCKER_ENGINE) + `/containers/${containerId}/stop`, { method: 'POST', headers });
+	// nullであってはおかしいので早期return
+	if (containerId == null) {
+		return null
 	}
 
-	return null
+	let result: Response | undefined = undefined;
+	if (containerOperation === "stop") {
+		result = await fetch(new URL(DOCKER_ENGINE_VERSION, DOCKER_ENGINE) + `/containers/${containerId}/stop`, { method: 'POST', headers });
+	} else if (containerOperation === "start") {
+		result = await fetch(new URL(DOCKER_ENGINE_VERSION, DOCKER_ENGINE) + `/containers/${containerId}/start`, { method: 'POST', headers });
+	}
+
+	return result;
 }
 
 export default function Index() {
