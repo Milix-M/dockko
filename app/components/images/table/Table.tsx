@@ -12,6 +12,7 @@ import { ja } from "date-fns/locale";
 import { FaTrash } from "react-icons/fa6";
 import { IoMdSearch } from "react-icons/io";
 import { TbDotsVertical } from "react-icons/tb";
+import getFileSizeWithUnit from "~/common/getFileSizeWithUnit";
 import { Image } from "~/common/types/image/Image";
 import RefreshButton from "~/components/common/buttons/refreshButton";
 
@@ -112,6 +113,8 @@ export default function Table({ tableProps }: Prop) {
                   { addSuffix: true, locale: ja }
                 );
 
+                const unitCalculatedSize = getFileSizeWithUnit(Size);
+
                 return (
                   <tr key={Id}>
                     <td className={classes}>
@@ -159,7 +162,9 @@ export default function Table({ tableProps }: Prop) {
                         color="blue-gray"
                         className="font-semibold"
                       >
-                        {Size}
+                        {unitCalculatedSize.length == 0
+                          ? "取得できませんでした"
+                          : unitCalculatedSize}
                       </Typography>
                     </td>
                     <td className={classes}>
