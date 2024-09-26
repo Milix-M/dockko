@@ -27,7 +27,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const searchWord = searchParams.get("search");
 
   // 検索キーワード無ければ絞り込みしない
-  if (searchWord == null) {
+  if (searchWord == null || searchWord == "") {
     return images;
   }
 
@@ -36,7 +36,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   for (const image of images) {
     // RepoTagsが存在してundefinedでないのを確認
-    if (image.RepoTags.length >= 1 && image.RepoTags[0] != null) {
+    if (
+      image.RepoTags != null &&
+      image.RepoTags.length >= 1 &&
+      image.RepoTags[0] != null
+    ) {
       const imageName = image.RepoTags[0].split(":")[0];
       const tagName = image.RepoTags[0].split(":").at(-1);
 
@@ -54,10 +58,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
         filteredImages.push(image);
       }
     }
-
-    // フィルタリングしたimageの配列を返却
-    return filteredImages;
   }
+
+  // フィルタリングしたimageの配列を返却
+  return filteredImages;
 }
 
 export default function Images() {
