@@ -7,6 +7,8 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { Form, useRevalidator, useSubmit } from "@remix-run/react";
+import { formatDistanceToNowStrict } from "date-fns";
+import { ja } from "date-fns/locale";
 import { FaTrash } from "react-icons/fa6";
 import { IoMdSearch } from "react-icons/io";
 import { TbDotsVertical } from "react-icons/tb";
@@ -104,6 +106,12 @@ export default function Table({ tableProps }: Prop) {
                 const isLast = index === tableProps.length - 1;
                 const classes = isLast ? "p-4" : "p-4 border-b border-gray-300";
 
+                // 現在の時間との距離をエポック秒から計算した結果
+                const createdAgo = formatDistanceToNowStrict(
+                  new Date(Created * 1000),
+                  { addSuffix: true, locale: ja }
+                );
+
                 return (
                   <tr key={Id}>
                     <td className={classes}>
@@ -142,7 +150,7 @@ export default function Table({ tableProps }: Prop) {
                         color="blue-gray"
                         className="font-semibold"
                       >
-                        {Created}
+                        {createdAgo}
                       </Typography>
                     </td>
                     <td className={classes}>
