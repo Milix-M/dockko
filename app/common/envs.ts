@@ -43,6 +43,6 @@ export function getBaseURL() {
       connectSettings.DOCKER_ENGINE
     );
   } else {
-    return new URL("v1.47", DOCKER_ENGINE_DEFAULT);
+    return new URL(DOCKER_ENGINE_VERSION_DEFAULT, DOCKER_ENGINE_DEFAULT);
   }
 }
