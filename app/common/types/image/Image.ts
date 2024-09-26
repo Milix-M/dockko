@@ -11,7 +11,7 @@ const ImageJSON = {
     "example@sha256:afcc7f1ac1b49db317a7196c902e61c6c3c4607d63599ee1a82d702d249a0ccb",
     "internal.registry.example.com:5000/example@sha256:b69959407d21e8a062e0416bf13405bb2b71ed7a84dde4158ebafacfa06f5578",
   ],
-  Created: "1644009612",
+  Created: 1644009612,
   Size: 172064416,
   SharedSize: 1239828,
   VirtualSize: 172064416,
