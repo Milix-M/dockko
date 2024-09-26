@@ -1,5 +1,8 @@
 import { store } from "~/electron.server";
 
+export const DOCKER_ENGINE_DEFAULT = "http://127.0.0.1:2375";
+export const DOCKER_ENGINE_VERSION_DEFAULT = "v1.47";
+
 /**
  * 接続に関する値をelectron-storeを使用して読み込む
  * @returns DockerエンジンのURLとAPIバージョン
@@ -7,11 +10,11 @@ import { store } from "~/electron.server";
 export function loadConnectSettingValues() {
   const DOCKER_ENGINE = store.get(
     "dockerEngineServer",
-    "http://127.0.0.1:2375"
+    DOCKER_ENGINE_DEFAULT
   ) as string;
   const DOCKER_ENGINE_VERSION = store.get(
     "dockerApiVersion",
-    "v1.47"
+    DOCKER_ENGINE_VERSION_DEFAULT
   ) as string;
 
   return {
@@ -40,6 +43,6 @@ export function getBaseURL() {
       connectSettings.DOCKER_ENGINE
     );
   } else {
-    return new URL("v1.47", "http://127.0.0.1:2375");
+    return new URL("v1.47", DOCKER_ENGINE_DEFAULT);
   }
 }
