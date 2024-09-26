@@ -10,9 +10,9 @@ import { Form, useRevalidator, useSubmit } from "@remix-run/react";
 import React from "react";
 import { FaTrash } from "react-icons/fa6";
 import { IoMdSearch } from "react-icons/io";
-import { LuRefreshCw } from "react-icons/lu";
 import { TbDotsVertical } from "react-icons/tb";
 import { ContainerDetail } from "~/common/types/ContainerDetail";
+import RefreshButton from "~/components/common/buttons/refreshButton";
 import ContainerStartBtn from "../buttons/ContainerStartBtn";
 import ContainerStopBtn from "../buttons/ContainerStopBtn";
 import ContainerRemoveConfirmModal from "../modal/ContainerRemoveConfirmModal";
@@ -81,16 +81,15 @@ export default function Table({ tableProps }: Prop) {
                 crossOrigin={undefined}
               />
             </Form>
-            <IconButton
+
+            {/* 再読み込みボタン */}
+            <RefreshButton
               variant="text"
               size="sm"
-              className="ml-2"
-              onClick={() => {
-                revalidator.revalidate();
-              }}
-            >
-              <LuRefreshCw className="h-4 w-4 text-gray-800" />
-            </IconButton>
+              iconClassName="ml-2"
+              buttonClassName="h-4 w-4 text-gray-800"
+              revalidator={revalidator}
+            />
           </div>
         </CardHeader>
         <table className="w-full min-w-fit table-auto text-left ">
