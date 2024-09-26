@@ -4,9 +4,9 @@ import { FaTrash } from "react-icons/fa6";
 import { IoMdSearch } from "react-icons/io";
 import { TbDotsVertical } from "react-icons/tb";
 import { ContainerDetail } from "~/common/types/ContainerDetail";
-import ContainerStartBtn from "./buttons/ContainerStartBtn";
-import ContainerStopBtn from "./buttons/ContainerStopBtn";
-import ContainerRemoveConfirmModal from "./modal/ContainerRemoveConfirmModal";
+import ContainerStartBtn from "../buttons/ContainerStartBtn";
+import ContainerStopBtn from "../buttons/ContainerStopBtn";
+import ContainerRemoveConfirmModal from "../modal/ContainerRemoveConfirmModal";
 import { LuRefreshCw } from "react-icons/lu";
 import { useRevalidator } from "@remix-run/react";
 
