@@ -12,18 +12,27 @@ export async function loader() {
   let containers: Container[] = [];
 
   // まず containers を取得
-  const response = await fetch(baseURL + "/containers/json?all=true");
-  containers = await response.json();
+  // fetchエラーをtry
+  try {
+    const response = await fetch(baseURL + "/containers/json?all=true");
+    containers = await response.json();
+  } catch (error) {
+    return null;
+  }
 
-  // コンテナごとの詳細を取得
-  const containerDetails: ContainerDetail[] = await Promise.all(
-    containers.map(async (container) => {
-      const res = await fetch(baseURL + `/containers/${container.Id}/json`);
-      return res.json();
-    })
-  );
-
-  return containerDetails; // containerDetails を直接返す
+  // fetchエラーをtry
+  try {
+    // コンテナごとの詳細を取得
+    const containerDetails: ContainerDetail[] = await Promise.all(
+      containers.map(async (container) => {
+        const res = await fetch(baseURL + `/containers/${container.Id}/json`);
+        return res.json();
+      })
+    );
+    return containerDetails; // containerDetails を直接返す
+  } catch (error) {
+    return null;
+  }
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -76,7 +85,25 @@ export default function Index() {
       <h1 className="text-2xl font-bold m-6">Containers</h1>
 
       <Suspense fallback={<div>Loading...</div>}>
-        <Table tableProps={containers} /> {/* コンテナの詳細を表示 */}
+        {containers != null ? (
+          <Table tableProps={containers} />
+        ) : (
+          <div className="flex justify-center">
+            <div>
+              <h2 className="text-2xl font-bold text-center">
+                コンテナ一覧の取得に失敗しました
+              </h2>
+              <p className="text-center mb-4">
+                接続設定で指定したDocker Serverとの通信が出来ませんでした。
+              </p>
+              <p className="text-center">
+                接続に関する設定が正しいか確認してください。
+                <br />
+                Docker Engine APIと通信出来ることを確認してください。
+              </p>
+            </div>
+          </div>
+        )}
       </Suspense>
     </main>
   );
