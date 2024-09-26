@@ -10,7 +10,11 @@ import { ActionFunctionArgs } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import React from "react";
 import { useTypedLoaderData } from "remix-typedjson";
-import { loadConnectSettingValues } from "~/common/envs";
+import {
+  DOCKER_ENGINE_DEFAULT,
+  DOCKER_ENGINE_VERSION_DEFAULT,
+  loadConnectSettingValues,
+} from "~/common/envs";
 import { store } from "~/electron.server";
 
 /**
@@ -74,7 +78,7 @@ export default function Settings() {
                 <Input
                   name="dockerEngineServer"
                   label="Server URL"
-                  placeholder="http://127.0.0.1:2375"
+                  placeholder={DOCKER_ENGINE_DEFAULT}
                   value={dockerEngineServer}
                   crossOrigin={undefined}
                   onChange={(value) =>
@@ -94,7 +98,7 @@ export default function Settings() {
                 <Input
                   name="dockerApiVersion"
                   label="API Version"
-                  placeholder="v1.47"
+                  placeholder={DOCKER_ENGINE_VERSION_DEFAULT}
                   value={dockerApiVersion}
                   crossOrigin={undefined}
                   onChange={(value) => setDockerApiVersion(value.target.value)}
