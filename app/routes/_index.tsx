@@ -1,4 +1,4 @@
-import { ActionFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Suspense } from "react";
 import { useTypedLoaderData } from "remix-typedjson";
 import { getBaseURL } from "~/common/envs";
@@ -6,7 +6,7 @@ import { Container } from "~/common/types/Container";
 import { ContainerDetail } from "~/common/types/ContainerDetail";
 import Table from "~/components/containers/table/Table";
 
-export async function loader() {
+export async function loader({ request }: LoaderFunctionArgs) {
   const baseURL = getBaseURL();
 
   let containers: Container[] = [];
@@ -29,6 +29,44 @@ export async function loader() {
         return res.json();
       })
     );
+
+    // クエリを取り出す
+    const url = new URL(request.url);
+    const searchParams = url.searchParams;
+
+    // 検索Boxの入力値をURLクエリから取得
+    const searchWord = searchParams.get("search");
+
+    // 検索boxの入力値でフィルタリングしたコンテナ配列
+    const filteredContainerDetails: ContainerDetail[] = [];
+
+    for (const container of containerDetails) {
+      // 検索キーワード無いなら全てを返す
+      if (searchWord == null) {
+        return containerDetails;
+        // 検索キーワードがあるなら
+      } else {
+        // コンテナ名と一致していたら
+        if (
+          container.Name.toLocaleLowerCase().includes(
+            searchWord.toLocaleLowerCase()
+          )
+        ) {
+          filteredContainerDetails.push(container);
+          // イメージ名と一致していたら
+        } else if (
+          container.Config.Image.toLocaleLowerCase().includes(
+            searchWord.toLocaleLowerCase()
+          )
+        ) {
+          filteredContainerDetails.push(container);
+        }
+
+        // フィルタリングしたContainerDetailの配列を返却
+        return filteredContainerDetails;
+      }
+    }
+
     return containerDetails; // containerDetails を直接返す
   } catch (error) {
     return null;
