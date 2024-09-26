@@ -27,8 +27,19 @@ export function loadConnectSettingValues() {
 export function getBaseURL() {
   const connectSettings = loadConnectSettingValues();
 
-  return new URL(
-    connectSettings.DOCKER_ENGINE_VERSION,
-    connectSettings.DOCKER_ENGINE
-  );
+  // URLとして正しくパースできるならそのままURLオブジェクトとしてインスタンス化して返却,
+  // パース出来ないならデフォルトの接続先URLオブジェクトを返却
+  if (
+    URL.canParse(
+      connectSettings.DOCKER_ENGINE_VERSION,
+      connectSettings.DOCKER_ENGINE
+    )
+  ) {
+    return new URL(
+      connectSettings.DOCKER_ENGINE_VERSION,
+      connectSettings.DOCKER_ENGINE
+    );
+  } else {
+    return new URL("v1.47", "http://127.0.0.1:2375");
+  }
 }
