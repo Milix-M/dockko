@@ -18,8 +18,6 @@ export default function Table({ tableProps }: Prop) {
     const [removeConfirmModalOpen, setRemoveConfirmModalOpen] = React.useState(false);
     const [removeTarget, setRemoveTarget] = React.useState("");
     const revalidator = useRevalidator();
-    const [containers, setContainers] =
-      React.useState<ContainerDetail[]>(tableProps);
 
     const tableHead = [
       {
@@ -98,12 +96,12 @@ export default function Table({ tableProps }: Prop) {
               </tr>
             </thead>
             <tbody>
-              {containers.map(
+              {tableProps.map(
                 (
                   { Name, Config, State, HostConfig, NetworkSettings, Id },
                   index
                 ) => {
-                  const isLast = index === containers.length - 1;
+                  const isLast = index === tableProps.length - 1;
                   const classes = isLast
                     ? "p-4"
                     : "p-4 border-b border-gray-300";
