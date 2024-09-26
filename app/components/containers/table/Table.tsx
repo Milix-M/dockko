@@ -60,6 +60,7 @@ export default function Table({ tableProps }: Prop) {
           >
             <div className="w-full md:w-96 flex items-center">
               <Input
+                name="search"
                 label="Search"
                 icon={<IoMdSearch className="h-5 w-5" />}
                 crossOrigin={undefined}
