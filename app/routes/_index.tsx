@@ -37,37 +37,33 @@ export async function loader({ request }: LoaderFunctionArgs) {
     // 検索Boxの入力値をURLクエリから取得
     const searchWord = searchParams.get("search");
 
+    // 検索キーワード無いなら全てを返す
+    if (searchWord == null || searchWord == "") {
+      return containerDetails;
+    }
+
     // 検索boxの入力値でフィルタリングしたコンテナ配列
     const filteredContainerDetails: ContainerDetail[] = [];
 
     for (const container of containerDetails) {
-      // 検索キーワード無いなら全てを返す
-      if (searchWord == null) {
-        return containerDetails;
-        // 検索キーワードがあるなら
-      } else {
-        // コンテナ名と一致していたら
-        if (
-          container.Name.toLocaleLowerCase().includes(
-            searchWord.toLocaleLowerCase()
-          )
-        ) {
-          filteredContainerDetails.push(container);
-          // イメージ名と一致していたら
-        } else if (
-          container.Config.Image.toLocaleLowerCase().includes(
-            searchWord.toLocaleLowerCase()
-          )
-        ) {
-          filteredContainerDetails.push(container);
-        }
-
-        // フィルタリングしたContainerDetailの配列を返却
-        return filteredContainerDetails;
+      // コンテナ名と一致していたら
+      if (
+        container.Name.toLocaleLowerCase().includes(
+          searchWord.toLocaleLowerCase()
+        )
+      ) {
+        filteredContainerDetails.push(container);
+        // イメージ名と一致していたら
+      } else if (
+        container.Config.Image.toLocaleLowerCase().includes(
+          searchWord.toLocaleLowerCase()
+        )
+      ) {
+        filteredContainerDetails.push(container);
       }
     }
-
-    return containerDetails; // containerDetails を直接返す
+    // フィルタリングしたContainerDetailの配列を返却
+    return filteredContainerDetails;
   } catch (error) {
     return null;
   }
