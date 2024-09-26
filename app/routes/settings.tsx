@@ -10,6 +10,7 @@ import { ActionFunctionArgs } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import React from "react";
 import { useTypedLoaderData } from "remix-typedjson";
+import { loadConnectSettingValues } from "~/common/envs";
 import { store } from "~/electron.server";
 
 /**
@@ -17,16 +18,7 @@ import { store } from "~/electron.server";
  * @returns electron-storeで取得した設定値
  */
 export async function loader() {
-  const dockerEngineServer = store.get(
-    "dockerEngineServer",
-    "http://127.0.0.1:2375"
-  );
-  const dockerApiVersion = store.get("dockerApiVersion", "v1.47");
-
-  return {
-    dockerEngineServer,
-    dockerApiVersion,
-  };
+  return loadConnectSettingValues();
 }
 
 /**
@@ -51,10 +43,10 @@ export default function Settings() {
   const settingsValues = useTypedLoaderData<typeof loader>();
 
   const [dockerEngineServer, setDockerEngineServer] = React.useState(
-    settingsValues.dockerEngineServer as string
+    settingsValues.DOCKER_ENGINE
   );
   const [dockerApiVersion, setDockerApiVersion] = React.useState(
-    settingsValues.dockerApiVersion as string
+    settingsValues.DOCKER_ENGINE_VERSION
   );
 
   return (
