@@ -1,5 +1,8 @@
+import { Alert } from "@material-tailwind/react";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { useTypedLoaderData } from "remix-typedjson";
+import React, { useEffect } from "react";
+import { RiCheckboxCircleLine, RiErrorWarningLine } from "react-icons/ri";
+import { useTypedActionData, useTypedLoaderData } from "remix-typedjson";
 import { getBaseURL } from "~/common/envs";
 import { Image } from "~/common/types/image/Image";
 import Table from "~/components/images/table/Table";
@@ -91,11 +94,36 @@ export async function action({ request }: ActionFunctionArgs) {
       break;
   }
 
-  return result;
+  // そのまま返すとResponseオブジェクトじゃなくなるのでバグる
+  if (result != null) {
+    return { status: result.status, text: result.statusText };
+  } else {
+    return null;
+  }
 }
 
 export default function Images() {
   const images = useTypedLoaderData<typeof loader>();
+  const data = useTypedActionData<typeof action>();
+
+  // 通知の表示管理ステート
+  const [successAlertOpen, setSuccessAlertOpen] = React.useState(false);
+  const [errorAlertOpen, setErrorAlertOpen] = React.useState(false);
+
+  // 通知の表示管理副作用
+  useEffect(() => {
+    if (data?.status === 200) {
+      setSuccessAlertOpen(true);
+      setTimeout(() => {
+        setSuccessAlertOpen(false);
+      }, 3000);
+    } else if (data != null && data.status !== 200) {
+      setErrorAlertOpen(true);
+      setTimeout(() => {
+        setErrorAlertOpen(false);
+      }, 3000);
+    }
+  }, [data]);
 
   return (
     <main>
@@ -119,6 +147,36 @@ export default function Images() {
           </div>
         </div>
       )}
+
+      <div className="flex justify-center bottom-6 absolute left-1/2">
+        <div className="flex flex-col gap-2">
+          <Alert
+            open={successAlertOpen}
+            onClose={() => setSuccessAlertOpen(false)}
+            color="green"
+            icon={<RiCheckboxCircleLine className="h-6 w-6" />}
+            animate={{
+              mount: { y: 0 },
+              unmount: { y: 15 },
+            }}
+          >
+            イメージの削除に成功しました
+          </Alert>
+
+          <Alert
+            open={errorAlertOpen}
+            onClose={() => setErrorAlertOpen(false)}
+            color="red"
+            icon={<RiErrorWarningLine className="h-6 w-6" />}
+            animate={{
+              mount: { y: 0 },
+              unmount: { y: 15 },
+            }}
+          >
+            イメージの削除に失敗しました
+          </Alert>
+        </div>
+      </div>
     </main>
   );
 }
