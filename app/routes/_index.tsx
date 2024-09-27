@@ -8,23 +8,28 @@ import { Container } from "~/common/types/container/Container";
 import { ContainerDetail } from "~/common/types/container/ContainerDetail";
 import Table from "~/components/containers/table/Table";
 
+/**
+ * コンテナのデータを取得するローダー関数。
+ *
+ * @param {LoaderFunctionArgs} param0 - Remixのローダー引数
+ * @returns {Promise<ContainerDetail[] | null>} コンテナの詳細情報を返す。エラー時はnullを返す。
+ */
 export async function loader({ request }: LoaderFunctionArgs) {
   const baseURL = getBaseURL();
 
   let containers: Container[] = [];
 
-  // まず containers を取得
-  // fetchエラーをtry
+  // コンテナのリストを取得する
   try {
     const response = await fetch(baseURL + "/containers/json?all=true");
     containers = await response.json();
   } catch (error) {
+    // コンテナの取得に失敗した場合はnullを返す
     return null;
   }
 
-  // fetchエラーをtry
   try {
-    // コンテナごとの詳細を取得
+    // 各コンテナの詳細情報を取得する
     const containerDetails: ContainerDetail[] = await Promise.all(
       containers.map(async (container) => {
         const res = await fetch(baseURL + `/containers/${container.Id}/json`);
@@ -32,31 +37,24 @@ export async function loader({ request }: LoaderFunctionArgs) {
       })
     );
 
-    // クエリを取り出す
+    // URLクエリパラメータから検索キーワードを取得
     const url = new URL(request.url);
     const searchParams = url.searchParams;
-
-    // 検索Boxの入力値をURLクエリから取得
     const searchWord = searchParams.get("search");
 
-    // 検索キーワード無いなら全てを返す
+    // 検索キーワードが無ければ全てのコンテナを返す
     if (searchWord == null || searchWord == "") {
       return containerDetails;
     }
 
-    // 検索boxの入力値でフィルタリングしたコンテナ配列
+    // 検索キーワードに基づいてコンテナをフィルタリング
     const filteredContainerDetails: ContainerDetail[] = [];
 
     for (const container of containerDetails) {
-      // コンテナ名と一致していたら
       if (
         container.Name.toLocaleLowerCase().includes(
           searchWord.toLocaleLowerCase()
-        )
-      ) {
-        filteredContainerDetails.push(container);
-        // イメージ名と一致していたら
-      } else if (
+        ) ||
         container.Config.Image.toLocaleLowerCase().includes(
           searchWord.toLocaleLowerCase()
         )
@@ -64,16 +62,22 @@ export async function loader({ request }: LoaderFunctionArgs) {
         filteredContainerDetails.push(container);
       }
     }
-    // フィルタリングしたContainerDetailの配列を返却
+
     return filteredContainerDetails;
   } catch (error) {
+    // エラーが発生した場合はnullを返す
     return null;
   }
 }
 
+/**
+ * コンテナ操作を実行するアクション関数。
+ *
+ * @param {ActionFunctionArgs} param0 - Remixのアクション引数
+ * @returns {Promise<{status: number, text: string, msg: string, alertType: string} | null>} 実行結果のメッセージやステータスを含むオブジェクトを返す
+ */
 export async function action({ request }: ActionFunctionArgs) {
   const baseURL = getBaseURL();
-
   const formData = await request.formData();
   const containerId = formData.get("containerId");
   const containerOperation = formData.get("container");
@@ -83,23 +87,19 @@ export async function action({ request }: ActionFunctionArgs) {
     "Content-Type": "application/json",
   };
 
-  // nullであってはおかしいので早期return
+  // コンテナIDが無い場合はnullを返す
   if (containerId == null) {
     return null;
   }
 
-  // 生Response
   let result: Response | null = null;
-  // 実際に返却する値(ステータスとステータステキストが入る)
   let res = null;
-  // 返却するメッセージ
   let msg = null;
-  // Alertで標示されて欲しい通知カテゴリ
   let alertType: "success" | "warning" | "error" | null = null;
 
   switch (containerOperation) {
-    // コンテナ停止の場合
     case "stop":
+      // コンテナの停止操作
       result = await fetch(baseURL + `/containers/${containerId}/stop`, {
         method: "POST",
         headers,
@@ -112,10 +112,10 @@ export async function action({ request }: ActionFunctionArgs) {
         msg = "コンテナの停止に失敗しました";
         alertType = "error";
       }
-
       break;
-    // コンテナ起動の場合
+
     case "start":
+      // コンテナの起動操作
       result = await fetch(baseURL + `/containers/${containerId}/start`, {
         method: "POST",
         headers,
@@ -128,10 +128,10 @@ export async function action({ request }: ActionFunctionArgs) {
         msg = "コンテナの起動に失敗しました";
         alertType = "error";
       }
-
       break;
-    // コンテナ削除の場合
+
     case "trash":
+      // コンテナの削除操作
       result = await fetch(baseURL + `/containers/${containerId}?force=true`, {
         method: "DELETE",
         headers,
@@ -144,7 +144,6 @@ export async function action({ request }: ActionFunctionArgs) {
         msg = "コンテナの削除に失敗しました";
         alertType = "error";
       }
-
       break;
   }
 
@@ -160,17 +159,22 @@ export async function action({ request }: ActionFunctionArgs) {
   return res;
 }
 
+/**
+ * メインのIndexコンポーネント
+ *
+ * @returns {JSX.Element} コンテナの一覧と操作結果を表示するJSX要素
+ */
 export default function Index() {
   const containers = useTypedLoaderData<typeof loader>();
   const data = useTypedActionData<typeof action>();
 
-  // 通知の表示管理ステート
+  // 通知の表示制御ステート
   const [successAlertOpen, setSuccessAlertOpen] = React.useState(false);
   const [errorAlertOpen, setErrorAlertOpen] = React.useState(false);
   const [successMsg, setSuccessMsg] = React.useState<string | null>();
   const [errorMsg, setErrorMsg] = React.useState<string | null>();
 
-  // 通知の表示管理副作用
+  // アクション結果に基づいて通知を表示する
   useEffect(() => {
     if (data != null && data.alertType === "success") {
       setSuccessAlertOpen(true);
