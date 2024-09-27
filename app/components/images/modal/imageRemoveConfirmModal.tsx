@@ -40,14 +40,14 @@ export default function ImageRemoveConfirmModal({
             <span>キャンセル</span>
           </Button>
           <Form replace method="post">
-            <input type="hidden" value={removeTarget} name="containerId" />
+            <input type="hidden" value={removeTarget} name="imageId" />
 
             <Button
               variant="gradient"
               color="teal"
               onClick={handleOpen}
               type="submit"
-              name="container"
+              name="image"
               value="trash"
             >
               <span>削除</span>
