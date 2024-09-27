@@ -4,7 +4,7 @@ import React, { Suspense, useEffect } from "react";
 import { RiCheckboxCircleLine, RiErrorWarningLine } from "react-icons/ri";
 import { useTypedActionData, useTypedLoaderData } from "remix-typedjson";
 import { getBaseURL } from "~/common/envs";
-import { Container } from "~/common/types/container/Container";
+import { Container } from "~/common/types/container/container";
 import { ContainerDetail } from "~/common/types/container/ContainerDetail";
 import Table from "~/components/containers/table/Table";
 
