@@ -1,6 +1,8 @@
+import { Alert } from "@material-tailwind/react";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Suspense } from "react";
-import { useTypedLoaderData } from "remix-typedjson";
+import React, { Suspense, useEffect } from "react";
+import { RiCheckboxCircleLine, RiErrorWarningLine } from "react-icons/ri";
+import { useTypedActionData, useTypedLoaderData } from "remix-typedjson";
 import { getBaseURL } from "~/common/envs";
 import { Container } from "~/common/types/container/Container";
 import { ContainerDetail } from "~/common/types/container/ContainerDetail";
@@ -86,33 +88,104 @@ export async function action({ request }: ActionFunctionArgs) {
     return null;
   }
 
+  // 生Response
   let result: Response | null = null;
+  // 実際に返却する値(ステータスとステータステキストが入る)
+  let res = null;
+  // 返却するメッセージ
+  let msg = null;
+  // Alertで標示されて欲しい通知カテゴリ
+  let alertType: "success" | "warning" | "error" | null = null;
+
   switch (containerOperation) {
+    // コンテナ停止の場合
     case "stop":
       result = await fetch(baseURL + `/containers/${containerId}/stop`, {
         method: "POST",
         headers,
       });
+
+      if (result != null && result.status === 204) {
+        msg = "コンテナの停止に成功しました";
+        alertType = "success";
+      } else {
+        msg = "コンテナの停止に失敗しました";
+        alertType = "error";
+      }
+
       break;
+    // コンテナ起動の場合
     case "start":
       result = await fetch(baseURL + `/containers/${containerId}/start`, {
         method: "POST",
         headers,
       });
+
+      if (result != null && result.status === 204) {
+        msg = "コンテナの起動に成功しました";
+        alertType = "success";
+      } else {
+        msg = "コンテナの起動に失敗しました";
+        alertType = "error";
+      }
+
       break;
+    // コンテナ削除の場合
     case "trash":
       result = await fetch(baseURL + `/containers/${containerId}?force=true`, {
         method: "DELETE",
         headers,
       });
+
+      if (result != null && result.status === 204) {
+        msg = "コンテナの削除に成功しました";
+        alertType = "success";
+      } else {
+        msg = "コンテナの削除に失敗しました";
+        alertType = "error";
+      }
+
       break;
   }
 
-  return result;
+  if (result != null) {
+    res = {
+      status: result.status,
+      text: result.statusText,
+      msg: msg,
+      alertType: alertType,
+    };
+  }
+
+  return res;
 }
 
 export default function Index() {
   const containers = useTypedLoaderData<typeof loader>();
+  const data = useTypedActionData<typeof action>();
+
+  // 通知の表示管理ステート
+  const [successAlertOpen, setSuccessAlertOpen] = React.useState(false);
+  const [errorAlertOpen, setErrorAlertOpen] = React.useState(false);
+  const [successMsg, setSuccessMsg] = React.useState<string | null>();
+  const [errorMsg, setErrorMsg] = React.useState<string | null>();
+
+  // 通知の表示管理副作用
+  useEffect(() => {
+    if (data != null && data.alertType === "success") {
+      setSuccessAlertOpen(true);
+      setSuccessMsg(data?.msg);
+      setTimeout(() => {
+        setSuccessAlertOpen(false);
+      }, 3000);
+    } else if (data != null && data.alertType === "error") {
+      setErrorAlertOpen(true);
+      setErrorMsg(data?.msg);
+      setTimeout(() => {
+        setErrorAlertOpen(false);
+      }, 3000);
+    }
+  }, [data]);
 
   return (
     <main>
@@ -139,6 +212,36 @@ export default function Index() {
           </div>
         )}
       </Suspense>
+
+      <div className="flex justify-center bottom-6 absolute left-1/2">
+        <div className="flex flex-col gap-2">
+          <Alert
+            open={successAlertOpen}
+            onClose={() => setSuccessAlertOpen(false)}
+            color="green"
+            icon={<RiCheckboxCircleLine className="h-6 w-6" />}
+            animate={{
+              mount: { y: 0 },
+              unmount: { y: 15 },
+            }}
+          >
+            {successMsg}
+          </Alert>
+
+          <Alert
+            open={errorAlertOpen}
+            onClose={() => setErrorAlertOpen(false)}
+            color="red"
+            icon={<RiErrorWarningLine className="h-6 w-6" />}
+            animate={{
+              mount: { y: 0 },
+              unmount: { y: 15 },
+            }}
+          >
+            {errorMsg}
+          </Alert>
+        </div>
+      </div>
     </main>
   );
 }
