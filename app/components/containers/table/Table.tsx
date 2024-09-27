@@ -11,7 +11,7 @@ import React from "react";
 import { FaTrash } from "react-icons/fa6";
 import { IoMdSearch } from "react-icons/io";
 import { TbDotsVertical } from "react-icons/tb";
-import { ContainerDetail } from "~/common/types/container/ContainerDetail";
+import { ContainerDetail } from "~/common/types/container/containerDetail";
 import RefreshButton from "~/components/common/buttons/refreshButton";
 import ContainerStartBtn from "../buttons/ContainerStartBtn";
 import ContainerStopBtn from "../buttons/ContainerStopBtn";
