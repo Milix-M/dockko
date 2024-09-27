@@ -6,7 +6,7 @@ import { createReadableStreamFromReadable } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
 import * as isbotModule from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
-import { theme } from "./common/ThemeSetting";
+import { theme } from "./common/themeSetting";
 
 const ABORT_DELAY = 5_000;
 
