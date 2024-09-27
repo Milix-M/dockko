@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useTypedLoaderData } from "remix-typedjson";
 import { getBaseURL } from "~/common/envs";
 import { Image } from "~/common/types/image/Image";
@@ -62,6 +62,36 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   // フィルタリングしたimageの配列を返却
   return filteredImages;
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const baseURL = getBaseURL();
+
+  const formData = await request.formData();
+  const imageId = formData.get("imageId");
+  const imageOperation = formData.get("image");
+
+  const headers = {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  };
+
+  // nullであってはおかしいので早期return
+  if (imageId == null) {
+    return null;
+  }
+
+  let result: Response | null = null;
+  switch (imageOperation) {
+    case "trash":
+      result = await fetch(baseURL + `/images/${imageId}`, {
+        method: "DELETE",
+        headers,
+      });
+      break;
+  }
+
+  return result;
 }
 
 export default function Images() {
