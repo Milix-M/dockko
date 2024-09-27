@@ -9,18 +9,23 @@ import {
 import { Form, useRevalidator, useSubmit } from "@remix-run/react";
 import { formatDistanceToNowStrict } from "date-fns";
 import { ja } from "date-fns/locale";
+import React from "react";
 import { FaTrash } from "react-icons/fa6";
 import { IoMdSearch } from "react-icons/io";
 import { TbDotsVertical } from "react-icons/tb";
 import getFileSizeWithUnit from "~/common/getFileSizeWithUnit";
 import { Image } from "~/common/types/image/Image";
 import RefreshButton from "~/components/common/buttons/refreshButton";
+import ImageRemoveConfirmModal from "../modal/imageRemoveConfirmModal";
 
 type Prop = {
   tableProps: Image[];
 };
 
 export default function Table({ tableProps }: Prop) {
+  const [removeConfirmModalOpen, setRemoveConfirmModalOpen] =
+    React.useState(false);
+  const [removeTarget, setRemoveTarget] = React.useState("");
   const revalidator = useRevalidator();
   const submit = useSubmit();
 
@@ -51,6 +56,12 @@ export default function Table({ tableProps }: Prop) {
 
   return (
     <>
+      <ImageRemoveConfirmModal
+        open={removeConfirmModalOpen}
+        setOpen={setRemoveConfirmModalOpen}
+        removeTarget={removeTarget}
+      />
+
       <Card className="h-full w-full">
         <CardHeader
           floated={false}
@@ -173,7 +184,16 @@ export default function Table({ tableProps }: Prop) {
                           <TbDotsVertical className="h-4 w-4 text-gray-800" />
                         </IconButton>
 
-                        <IconButton variant="text" size="sm">
+                        <IconButton
+                          variant="text"
+                          size="sm"
+                          onClick={() => {
+                            // 削除対象指定してあげる
+                            setRemoveTarget(Id);
+                            // モーダル表示
+                            setRemoveConfirmModalOpen(true);
+                          }}
+                        >
                           <FaTrash className="h-4 w-4 text-gray-800" />
                         </IconButton>
                       </div>
