@@ -22,13 +22,22 @@ type Prop = {
   tableProps: Image[];
 };
 
+/**
+ * イメージ一覧表示用のテーブルコンポーネント。
+ *
+ * @param {Image[]} tableProps - 表示するイメージデータの配列
+ * @returns {JSX.Element} テーブルのJSX要素
+ */
 export default function Table({ tableProps }: Prop) {
+  // モーダルの開閉を管理するステート
   const [removeConfirmModalOpen, setRemoveConfirmModalOpen] =
     React.useState(false);
+  // 削除対象のイメージIDを管理するステート
   const [removeTarget, setRemoveTarget] = React.useState("");
   const revalidator = useRevalidator();
   const submit = useSubmit();
 
+  // テーブルヘッダーの項目定義
   const tableHead = [
     {
       head: "Name",
@@ -56,12 +65,14 @@ export default function Table({ tableProps }: Prop) {
 
   return (
     <>
+      {/* イメージ削除確認モーダル */}
       <ImageRemoveConfirmModal
         open={removeConfirmModalOpen}
         setOpen={setRemoveConfirmModalOpen}
         removeTarget={removeTarget}
       />
 
+      {/* テーブルカード */}
       <Card className="h-full w-full">
         <CardHeader
           floated={false}
@@ -93,7 +104,9 @@ export default function Table({ tableProps }: Prop) {
             />
           </div>
         </CardHeader>
-        <table className="w-full min-w-fit table-auto text-left ">
+
+        {/* イメージデータを表示するテーブル */}
+        <table className="w-full min-w-fit table-auto text-left">
           <thead>
             <tr>
               {tableHead.map(({ head, icon }) => (
@@ -118,16 +131,18 @@ export default function Table({ tableProps }: Prop) {
                 const isLast = index === tableProps.length - 1;
                 const classes = isLast ? "p-4" : "p-4 border-b border-gray-300";
 
-                // 現在の時間との距離をエポック秒から計算した結果
+                // 作成日時を「〜前」という形式で表示するために距離を計算
                 const createdAgo = formatDistanceToNowStrict(
                   new Date(Created * 1000),
                   { addSuffix: true, locale: ja }
                 );
 
+                // ファイルサイズを単位付きで取得
                 const unitCalculatedSize = getFileSizeWithUnit(Size);
 
                 return (
                   <tr key={Id}>
+                    {/* イメージ名の表示 */}
                     <td className={classes}>
                       <div className="flex items-center gap-1">
                         <Checkbox crossOrigin={undefined} />
@@ -140,6 +155,7 @@ export default function Table({ tableProps }: Prop) {
                         </Typography>
                       </div>
                     </td>
+                    {/* イメージのタグ表示 */}
                     <td className={classes}>
                       <Typography
                         variant="small"
@@ -149,6 +165,7 @@ export default function Table({ tableProps }: Prop) {
                         {RepoTags ? RepoTags[0]?.split(":").at(-1) : "<None>"}
                       </Typography>
                     </td>
+                    {/* イメージの状態表示 */}
                     <td className={classes}>
                       <Typography
                         variant="small"
@@ -158,6 +175,7 @@ export default function Table({ tableProps }: Prop) {
                         {Containers > 0 ? "used" : "unused"}
                       </Typography>
                     </td>
+                    {/* 作成日時の表示 */}
                     <td className={classes}>
                       <Typography
                         variant="small"
@@ -167,6 +185,7 @@ export default function Table({ tableProps }: Prop) {
                         {createdAgo}
                       </Typography>
                     </td>
+                    {/* イメージサイズの表示 */}
                     <td className={classes}>
                       <Typography
                         variant="small"
@@ -178,19 +197,22 @@ export default function Table({ tableProps }: Prop) {
                           : unitCalculatedSize}
                       </Typography>
                     </td>
+                    {/* アクションボタン (削除など) */}
                     <td className={classes}>
                       <div className="flex items-center gap-2">
+                        {/* 詳細メニュー */}
                         <IconButton variant="text" size="sm">
                           <TbDotsVertical className="h-4 w-4 text-gray-800" />
                         </IconButton>
 
+                        {/* 削除ボタン */}
                         <IconButton
                           variant="text"
                           size="sm"
                           onClick={() => {
-                            // 削除対象指定してあげる
+                            // 削除対象を設定
                             setRemoveTarget(Id);
-                            // モーダル表示
+                            // モーダルを表示
                             setRemoveConfirmModalOpen(true);
                           }}
                         >
