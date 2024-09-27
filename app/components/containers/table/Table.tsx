@@ -21,13 +21,22 @@ type Prop = {
   tableProps: ContainerDetail[];
 };
 
+/**
+ * コンテナ一覧を表示するテーブルコンポーネント。
+ *
+ * @param {ContainerDetail[]} tableProps - 表示するコンテナの詳細情報の配列
+ * @returns {JSX.Element} テーブルのJSX要素
+ */
 export default function Table({ tableProps }: Prop) {
+  // モーダルの開閉を管理する状態
   const [removeConfirmModalOpen, setRemoveConfirmModalOpen] =
     React.useState(false);
+  // 削除対象のコンテナIDを管理する状態
   const [removeTarget, setRemoveTarget] = React.useState("");
   const revalidator = useRevalidator();
   const submit = useSubmit();
 
+  // テーブルのヘッダー
   const tableHead = [
     {
       head: "Name",
@@ -55,12 +64,14 @@ export default function Table({ tableProps }: Prop) {
 
   return (
     <>
+      {/* コンテナ削除確認モーダル */}
       <ContainerRemoveConfirmModal
         open={removeConfirmModalOpen}
         setOpen={setRemoveConfirmModalOpen}
         removeTarget={removeTarget}
       />
 
+      {/* コンテナ一覧を表示するカード */}
       <Card className="h-full w-full">
         <CardHeader
           floated={false}
@@ -68,7 +79,7 @@ export default function Table({ tableProps }: Prop) {
           className="mb-2 rounded-none p-2"
         >
           <div className="w-full md:w-96 flex items-center">
-            {/* 検索システムのためのForm */}
+            {/* 検索フォーム */}
             <Form
               onChange={(event) => {
                 submit(event.currentTarget);
@@ -92,7 +103,9 @@ export default function Table({ tableProps }: Prop) {
             />
           </div>
         </CardHeader>
-        <table className="w-full min-w-fit table-auto text-left ">
+
+        {/* コンテナデータを表示するテーブル */}
+        <table className="w-full min-w-fit table-auto text-left">
           <thead>
             <tr>
               {tableHead.map(({ head, icon }) => (
@@ -122,6 +135,7 @@ export default function Table({ tableProps }: Prop) {
 
                 return (
                   <tr key={Name}>
+                    {/* コンテナ名 */}
                     <td className={classes}>
                       <div className="flex items-center gap-1">
                         <Checkbox crossOrigin={undefined} />
@@ -130,11 +144,13 @@ export default function Table({ tableProps }: Prop) {
                           color="blue-gray"
                           className="font-semibold"
                         >
-                          {/* 先頭に変なスラッシュ入るのでsubstringで回避 */}
+                          {/* コンテナ名の先頭のスラッシュを削除 */}
                           {Name.substring(1)}
                         </Typography>
                       </div>
                     </td>
+
+                    {/* イメージ名 */}
                     <td className={classes}>
                       <Typography
                         variant="small"
@@ -144,6 +160,8 @@ export default function Table({ tableProps }: Prop) {
                         {Config.Image}
                       </Typography>
                     </td>
+
+                    {/* コンテナステータス */}
                     <td className={classes}>
                       <Typography
                         variant="small"
@@ -153,6 +171,8 @@ export default function Table({ tableProps }: Prop) {
                         {State.Status}
                       </Typography>
                     </td>
+
+                    {/* CPU使用率 */}
                     <td className={classes}>
                       <Typography
                         variant="small"
@@ -162,6 +182,8 @@ export default function Table({ tableProps }: Prop) {
                         {HostConfig.CpuPercent}%
                       </Typography>
                     </td>
+
+                    {/* ネットワークポート */}
                     <td className={classes}>
                       <Typography
                         variant="small"
@@ -173,7 +195,7 @@ export default function Table({ tableProps }: Prop) {
                             <span key={portKey}>
                               {portValues.map((port, index) => (
                                 <span key={index} className="block">
-                                  {/* tcp or udpが入るので正規表現で消して表示 */}
+                                  {/* TCPやUDPを削除してポート番号を表示 */}
                                   {portKey.replace(new RegExp("/.*"), "") +
                                     ":" +
                                     port.HostPort}
@@ -184,8 +206,11 @@ export default function Table({ tableProps }: Prop) {
                         )}
                       </Typography>
                     </td>
+
+                    {/* アクションボタン */}
                     <td className={classes}>
                       <div className="flex items-center gap-2">
+                        {/* コンテナが実行中の場合は停止ボタン、停止中の場合は開始ボタン */}
                         {State.Running ? (
                           <ContainerStopBtn
                             variant="text"
@@ -202,17 +227,18 @@ export default function Table({ tableProps }: Prop) {
                           />
                         )}
 
+                        {/* 詳細メニューボタン */}
                         <IconButton variant="text" size="sm">
                           <TbDotsVertical className="h-4 w-4 text-gray-800" />
                         </IconButton>
 
+                        {/* 削除ボタン */}
                         <IconButton
                           variant="text"
                           size="sm"
                           onClick={() => {
-                            // 削除対象指定してあげる
+                            // 削除対象を設定してモーダルを表示
                             setRemoveTarget(Id);
-                            // モーダル表示
                             setRemoveConfirmModalOpen(true);
                           }}
                         >
