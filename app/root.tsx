@@ -7,7 +7,7 @@ import {
 	Scripts,
 	ScrollRestoration,
 } from "@remix-run/react"
-import Sidebar from "./components/common/Sidebar"
+import Sidebar from "./components/common/sidebar";
 import styles from "./tailwind.css"
 
 export const meta: MetaFunction = () => [{ title: "Dockko" }]
