@@ -7,18 +7,19 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { Form, useRevalidator, useSubmit } from "@remix-run/react";
+import { formatDistanceToNowStrict } from "date-fns";
+import { ja } from "date-fns/locale";
 import React from "react";
 import { FaTrash } from "react-icons/fa6";
 import { IoMdSearch } from "react-icons/io";
 import { TbDotsVertical } from "react-icons/tb";
-import { ContainerDetail } from "~/common/types/container/ContainerDetail";
+import getFileSizeWithUnit from "~/common/getFileSizeWithUnit";
+import { Image } from "~/common/types/image/Image";
 import RefreshButton from "~/components/common/buttons/refreshButton";
-import ContainerStartBtn from "../buttons/ContainerStartBtn";
-import ContainerStopBtn from "../buttons/ContainerStopBtn";
-import ContainerRemoveConfirmModal from "../modal/ContainerRemoveConfirmModal";
+import ImageRemoveConfirmModal from "../modal/imageRemoveConfirmModal";
 
 type Prop = {
-  tableProps: ContainerDetail[];
+  tableProps: Image[];
 };
 
 export default function Table({ tableProps }: Prop) {
@@ -34,16 +35,16 @@ export default function Table({ tableProps }: Prop) {
       icon: <Checkbox crossOrigin={undefined} />,
     },
     {
-      head: "Image",
+      head: "Tag",
     },
     {
       head: "Status",
     },
     {
-      head: "CPU(%)",
+      head: "Created",
     },
     {
-      head: "Ports",
+      head: "Size",
     },
     {
       head: "Actions",
@@ -55,7 +56,7 @@ export default function Table({ tableProps }: Prop) {
 
   return (
     <>
-      <ContainerRemoveConfirmModal
+      <ImageRemoveConfirmModal
         open={removeConfirmModalOpen}
         setOpen={setRemoveConfirmModalOpen}
         removeTarget={removeTarget}
@@ -113,25 +114,29 @@ export default function Table({ tableProps }: Prop) {
           </thead>
           <tbody>
             {tableProps.map(
-              (
-                { Name, Config, State, HostConfig, NetworkSettings, Id },
-                index
-              ) => {
+              ({ RepoTags, Containers, Created, Size, Id }, index) => {
                 const isLast = index === tableProps.length - 1;
                 const classes = isLast ? "p-4" : "p-4 border-b border-gray-300";
 
+                // 現在の時間との距離をエポック秒から計算した結果
+                const createdAgo = formatDistanceToNowStrict(
+                  new Date(Created * 1000),
+                  { addSuffix: true, locale: ja }
+                );
+
+                const unitCalculatedSize = getFileSizeWithUnit(Size);
+
                 return (
-                  <tr key={Name}>
+                  <tr key={Id}>
                     <td className={classes}>
                       <div className="flex items-center gap-1">
                         <Checkbox crossOrigin={undefined} />
                         <Typography
                           variant="small"
                           color="blue-gray"
-                          className="font-semibold"
+                          className="font-semibold break-all"
                         >
-                          {/* 先頭に変なスラッシュ入るのでsubstringで回避 */}
-                          {Name.substring(1)}
+                          {RepoTags ? RepoTags[0]?.split(":")[0] : "<None>"}
                         </Typography>
                       </div>
                     </td>
@@ -141,7 +146,7 @@ export default function Table({ tableProps }: Prop) {
                         color="blue-gray"
                         className="font-semibold break-all"
                       >
-                        {Config.Image}
+                        {RepoTags ? RepoTags[0]?.split(":").at(-1) : "<None>"}
                       </Typography>
                     </td>
                     <td className={classes}>
@@ -150,7 +155,7 @@ export default function Table({ tableProps }: Prop) {
                         color="blue-gray"
                         className="font-semibold"
                       >
-                        {State.Status}
+                        {Containers > 0 ? "used" : "unused"}
                       </Typography>
                     </td>
                     <td className={classes}>
@@ -159,7 +164,7 @@ export default function Table({ tableProps }: Prop) {
                         color="blue-gray"
                         className="font-semibold"
                       >
-                        {HostConfig.CpuPercent}%
+                        {createdAgo}
                       </Typography>
                     </td>
                     <td className={classes}>
@@ -168,40 +173,13 @@ export default function Table({ tableProps }: Prop) {
                         color="blue-gray"
                         className="font-semibold"
                       >
-                        {Object.entries(NetworkSettings.Ports).map(
-                          ([portKey, portValues]) => (
-                            <span key={portKey}>
-                              {portValues.map((port, index) => (
-                                <span key={index} className="block">
-                                  {/* tcp or udpが入るので正規表現で消して表示 */}
-                                  {portKey.replace(new RegExp("/.*"), "") +
-                                    ":" +
-                                    port.HostPort}
-                                </span>
-                              ))}
-                            </span>
-                          )
-                        )}
+                        {unitCalculatedSize.length == 0
+                          ? "取得できませんでした"
+                          : unitCalculatedSize}
                       </Typography>
                     </td>
                     <td className={classes}>
                       <div className="flex items-center gap-2">
-                        {State.Running ? (
-                          <ContainerStopBtn
-                            variant="text"
-                            size="sm"
-                            className="h-4 w-4 text-gray-800"
-                            containerId={Id}
-                          />
-                        ) : (
-                          <ContainerStartBtn
-                            variant="text"
-                            size="sm"
-                            className="h-4 w-4 text-gray-800"
-                            containerId={Id}
-                          />
-                        )}
-
                         <IconButton variant="text" size="sm">
                           <TbDotsVertical className="h-4 w-4 text-gray-800" />
                         </IconButton>

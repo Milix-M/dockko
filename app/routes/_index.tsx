@@ -2,8 +2,8 @@ import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Suspense } from "react";
 import { useTypedLoaderData } from "remix-typedjson";
 import { getBaseURL } from "~/common/envs";
-import { Container } from "~/common/types/Container";
-import { ContainerDetail } from "~/common/types/ContainerDetail";
+import { Container } from "~/common/types/container/Container";
+import { ContainerDetail } from "~/common/types/container/ContainerDetail";
 import Table from "~/components/containers/table/Table";
 
 export async function loader({ request }: LoaderFunctionArgs) {
