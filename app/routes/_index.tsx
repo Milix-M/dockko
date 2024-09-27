@@ -171,8 +171,8 @@ export default function Index() {
   // 通知の表示制御ステート
   const [successAlertOpen, setSuccessAlertOpen] = React.useState(false);
   const [errorAlertOpen, setErrorAlertOpen] = React.useState(false);
-  const [successMsg, setSuccessMsg] = React.useState<string | null>();
-  const [errorMsg, setErrorMsg] = React.useState<string | null>();
+  const [successMsg, setSuccessMsg] = React.useState<string | null>("");
+  const [errorMsg, setErrorMsg] = React.useState<string | null>("");
 
   // アクション結果に基づいて通知を表示する
   useEffect(() => {
